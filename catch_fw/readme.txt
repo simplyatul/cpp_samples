@@ -8,5 +8,7 @@ $ make all
 
 Refs/Credits:
 https://raymii.org/s/tutorials/Cpp_project_setup_with_cmake_and_unit_tests.html
+http://mathnathan.com/2010/07/getting-started-with-cmake/
+
 
 
