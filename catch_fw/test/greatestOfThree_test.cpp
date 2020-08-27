@@ -5,10 +5,11 @@
 #include "greatestOfThree.h"
 
 TEST_CASE( "greatestOfThree test", "[greatestOfThree test]" ) {
-
-    auto a = 55;   
-    auto b = 5;   
-    auto c = 75;   
+    int a,b,c;
+    a = 55; b = 5; c = 75;   
     REQUIRE(75 == GreatestOfThree(a,b,c));
-    
+    a = 5; b = 55; c = 75;   
+    REQUIRE(75 == GreatestOfThree(a,b,c));
+    a = 5; b = 75; c = 55;   
+    REQUIRE(75 == GreatestOfThree(a,b,c));
 }
