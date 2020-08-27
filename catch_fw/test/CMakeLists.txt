@@ -11,7 +11,7 @@ add_test(NAME ${BINARY} COMMAND ${BINARY})
 target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib)
 
 # Create OBJECT_DIR variable
-set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/ObjDir)
+set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/${BINARY}.dir)
 message("-- Object files will be output to: ${OBJECT_DIR}")
 
 add_custom_target(gcov
@@ -36,4 +36,6 @@ add_custom_target(scrub
     COMMAND rm -f ${OBJECT_DIR}/*.gcda
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
+add_test(catch2_test ${CMAKE_CURRENT_BINARY_DIR}/${BINARY})
 

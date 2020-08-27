@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.0) 
 project (Catch2SampleProject)
 set(CMAKE_CXX_STANDARD 14)
-find_package(gcov REQUIRED)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     message("Building with GNU Tools")
