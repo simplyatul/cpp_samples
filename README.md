@@ -4,6 +4,7 @@ g++ thread_1.cpp -lboost_thread -lpthread
 
 
 if USE_BOOST is enabled then
+
 $ g++ thread_2.cpp -lboost_thread -lpthread
 
 else
