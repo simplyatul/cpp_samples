@@ -2,7 +2,24 @@
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
 
-// thread interrupting sample
+/* 
+ Interrupting the thread
+
+*/
+
+#define LOGTIME \
+    std::cout << std::time(nullptr) << ": " << __FUNCTION__ << ":" << __LINE__ << std::endl
+
+class A
+{
+public:
+    A() {
+        LOGTIME;
+    }
+    ~A() {
+        LOGTIME;
+    }
+};
 
 class Task
 {
@@ -16,12 +33,23 @@ public:
         for(int i = 0; i < 5; i++)
         {
             std::cout<<command<<" :: "<<i<<std::endl;
-            boost::this_thread::sleep_for(boost::chrono::seconds(1));
-            // sleep(1); // th->interrupt() will work with normal sleep
+            LOGTIME;
+            boost::this_thread::sleep_for(boost::chrono::seconds(1)); 
+            A a;
+            /* 
+             * If interrupt is called then 
+             * thread will straight away existing when above 
+             * sleep is called. So following line of code would not execute
+             * there after 
+             */
+            LOGTIME;
+            sleep(10); // boost::thread::interrupt() will not work with normal sleep
+            LOGTIME;
             if(true == exit) {
-                std::cout<<command<<"Breaking... "<<std::endl;
+                std::cout<<command<<" Breaking... "<<std::endl;
                 break;
             }
+            LOGTIME;
         }
     }
 
@@ -38,9 +66,12 @@ int main()
 {
     Task * taskPtr = new Task();
     // Create a thread using member function
-    boost::thread *th = new boost::thread(&Task::execute, taskPtr, "Task w/ Member Function");
+    boost::thread *th = nullptr;
+    th = new boost::thread(&Task::execute, taskPtr, "Task w/ Member Function");
     sleep(2);
-    th->interrupt();
+    LOGTIME;
+    th->interrupt(); // *** Use with care.
+    LOGTIME;
     //taskPtr->exit=true;
     th->join();
     delete taskPtr;
