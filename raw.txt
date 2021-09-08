@@ -9,3 +9,6 @@ else
 $ g++ thread_2.cpp -lpthread
 
 g++ thread_3.cpp -lboost_thread -lpthread -lboost_chrono
+
+g++ timer_3.cpp --std=c++17 -lboost_thread -lpthread -lboost_chrono 
+

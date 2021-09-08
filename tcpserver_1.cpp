@@ -1,7 +1,7 @@
 /* 
  * usage: tcpserver <port>
  * 
- * TCP Server take from #1 link
+ * TCP Server took from #1 link
  * It then modified to demonstrate self-pipe trick
  * After a client ($ nc 127.0.0.1 <port>) is connected, it 
  * spawns a thread and write on pipe
@@ -248,7 +248,7 @@ int main(int argc, char **argv) {
     while(running)
     {
         printf("\nPolling for input...\n");
-        event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
+        event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, 2000);
         printf("%d ready events\n", event_count);
         for(i = 0; i < event_count; i++)
         {
