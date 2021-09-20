@@ -8,9 +8,9 @@
 
 #include "utils.h"
 #include "Timer.h"
-#include "Callback.h"
+#include "TimerCallback.h"
 
-class TimerUser : public Callback, public std::enable_shared_from_this<TimerUser> {
+class TimerUser : public TimerCallback, public std::enable_shared_from_this<TimerUser> {
     Timer noRes;
 public:
     void onTimerExpire() {

@@ -12,14 +12,15 @@
 #include <condition_variable>
 #include <mutex>
 #include <iostream>
-#include "Callback.h"
+
+#include "TimerCallback.h"
 
 class Timer {
     std::condition_variable cv;
     mutable std::mutex m;
     bool isKilled = false;
     bool isReset = false;
-    std::thread active_thread;
+    std::thread timerThrd;
 
     void killThrd();
 
@@ -30,10 +31,9 @@ public:
     void reset() ;
     ~Timer();
     void once(std::chrono::seconds sleep_duration);
-    void once1(std::chrono::seconds sleep_duration, Callback* cbk);
-    void once2(std::chrono::seconds sleep_duration, std::shared_ptr<Callback> cbk);
+    void once1(std::chrono::seconds sleep_duration, TimerCallback* cbk);
+    void once2(std::chrono::seconds sleep_duration, std::shared_ptr<TimerCallback> cbk);
 };
-
 
 
 #endif /* INCLUDE_TIMER_H_ */

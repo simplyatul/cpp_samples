@@ -2,9 +2,9 @@
 #include "Timer.h"
 
 void Timer::killThrd() {
-    if (active_thread.joinable()) {
+    if (timerThrd.joinable()) {
         kill();
-        active_thread.join();
+        timerThrd.join();
     }
     isKilled = false; //safe, because all threads are dead
     isReset = false;
@@ -35,7 +35,7 @@ Timer::~Timer() {
 
 void Timer::once(std::chrono::seconds sleep_duration) {
     killThrd();
-    active_thread = std::thread( [&] (std::chrono::seconds sd /*sleep duration*/) {
+    timerThrd = std::thread( [&] (std::chrono::seconds sd /*sleep duration*/) {
                 auto l = lock();
                 std::cout << "In Thread: " << std::this_thread::get_id() << std::endl;
                 do {
@@ -48,9 +48,9 @@ void Timer::once(std::chrono::seconds sleep_duration) {
         );
 }
 
-void Timer::once1(std::chrono::seconds sleep_duration, Callback* cbk) {
+void Timer::once1(std::chrono::seconds sleep_duration, TimerCallback* cbk) {
     killThrd();
-    active_thread = std::thread( [&] (std::chrono::seconds sd /*sleep duration*/) {
+    timerThrd = std::thread( [&] (std::chrono::seconds sd /*sleep duration*/) {
                 auto l = lock();
                 std::cout << "In Thread: " << std::this_thread::get_id() << std::endl;
                 do {
@@ -64,9 +64,9 @@ void Timer::once1(std::chrono::seconds sleep_duration, Callback* cbk) {
         );
 }
 
-void Timer::once2(std::chrono::seconds sleep_duration, std::shared_ptr<Callback> cbk) {
+void Timer::once2(std::chrono::seconds sleep_duration, std::shared_ptr<TimerCallback> cbk) {
     killThrd();
-    active_thread = std::thread( [&] (std::chrono::seconds sd /*sleep duration*/, std::shared_ptr<Callback> cbk) {
+    timerThrd = std::thread( [&] (std::chrono::seconds sd /*sleep duration*/, std::shared_ptr<TimerCallback> cbk) {
                 auto l = lock();
                 std::cout << "once2: " << std::this_thread::get_id() << std::endl;
                 do {
