@@ -24,6 +24,16 @@ void newThrd() {
         n*=n;
     }
 }
+
+void newThrd_1() {
+    
+    cout << "In " << __func__ << endl;
+    
+    pthread_t currThrd = pthread_self();
+    pthread_setname_np(currThrd, __func__);
+    sleep(500);
+}
+
 void doThrd(std::string name) {
     cout << "In doThrd " << name << endl;
     boost::thread t2(newThrd);
@@ -43,6 +53,9 @@ int main() {
 #if  defined(BOOST_THREAD_PLATFORM_PTHREAD)
         pthread_setname_np(t1.native_handle(), "doThrd");
 #endif
+
+    boost::thread t2(newThrd_1);
+
     t1.join();
 
     return 0;
