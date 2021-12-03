@@ -46,7 +46,8 @@ public:
 
 int main(int argc, char *argv[]) {
 
-    auto ringBuffer = new RingBuffer<int>(3); // capacity size: 3 
+    auto ringBuffer = new RingBuffer<int>(3); // capacity size: 3
+    std::cout << "Type: " <<  typeid(ringBuffer).name() << std::endl;
     std::cout << "Capacity: " << ringBuffer->getRingBufferObj().write_available() << std::endl;
     ringBuffer->getRingBufferObj().push(1);
     ringBuffer->getRingBufferObj().push(2);

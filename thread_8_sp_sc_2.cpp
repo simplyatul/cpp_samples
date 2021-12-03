@@ -1,5 +1,5 @@
 /*
- * run: g++ thread_8_sp_sc_0.cpp -lpthread -lboost_thread -lboost_chrono -lboost_date_time
+ * run: g++ thread_8_sp_sc_2.cpp -lpthread -lboost_thread -lboost_chrono -lboost_date_time
  * Single Producer(sp), Single Consumer (sc) 
  *
  * Ref/Credits:
@@ -17,13 +17,10 @@
 #include "ThreadPool.h"
 #include <cstddef>
 #include <chrono>
-//#include "common.h"
+#include "RingBuffer.h"
+#include <string>
 
 using namespace std;
-
-#define Q_LENGHT        512
-#define PRODUCER_COUNT  1000000
-#define THREADS_IN_TP   16
 
 uint32_t totalTime = 0;
 uint32_t maxTime = 0;
@@ -49,7 +46,7 @@ public:
     void printTimeToProcess() {
         std::chrono::duration<double, std::milli> fp_ms = end - start;
         //cout << "Time taken to process " << msgNo << " is: " << fp_ms.count() << " ms" << std::endl; 
-        cout << fp_ms.count() << std::endl; 
+        //cout << fp_ms.count() << std::endl; 
         auto ticks = fp_ms.count();
         totalTime += ticks;
         if (maxTime < ticks) maxTime=ticks;
@@ -60,23 +57,21 @@ public:
 int producer_count = 0;
 boost::atomic_int consumer_count (0);
 
-boost::lockfree::spsc_queue<ShmMsg*, boost::lockfree::capacity<Q_LENGHT> > spsc_queue;
-
-const int iterations = PRODUCER_COUNT;
+RingBuffer<ShmMsg*> *spsc_queue;
 
 std::chrono::duration<double, std::milli> prodTime;
 
-void producer(void)
+void producer(const uint32_t producerCount)
 {
     pthread_setname_np(pthread_self(), __func__);
     auto t1 = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i != iterations; ++i) {
+    for (int i = 0; i != producerCount; ++i) {
         int value = ++producer_count;
         ShmMsg *msg = new ShmMsg(value);
         pool->service.post(
             boost::bind(&ShmMsg::processMsg, msg)
         );
-        while (!spsc_queue.push(msg))
+        while (!spsc_queue->getQ().push(msg))
             ;
     }
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -91,14 +86,14 @@ void consumer(void)
     int value;
     ShmMsg* shmMsg = nullptr;
     while (!done) {
-        while (spsc_queue.pop(shmMsg)){
+        while (spsc_queue->getQ().pop(shmMsg)){
             while(!shmMsg->isDone());
             shmMsg->printTimeToProcess();
             ++consumer_count;
         }
     }
 
-    while (spsc_queue.pop(shmMsg)) {
+    while (spsc_queue->getQ().pop(shmMsg)) {
         while(!shmMsg->isDone());
         shmMsg->printTimeToProcess();
         ++consumer_count;
@@ -107,28 +102,41 @@ void consumer(void)
 
 int main(int argc, char* argv[])
 {
+    if(4 != argc) {
+        cout << "I expect 3 int args. Q_LENGHT PRODUCER_COUNT THREADS_IN_TP. " << endl;
+        cout << "I trust you and I am not validating them" << endl;
+        return -1;
+    }
+    uint32_t qSize = std::stoi(argv[1]);
+    uint32_t producerCount = std::stoi(argv[2]);
+    uint32_t thrdInTP = std::stoi(argv[3]);
     using namespace std;
-    if (!spsc_queue.is_lock_free())
+    auto msgQ = new RingBuffer<ShmMsg*>(qSize); // capacity size: 3
+    spsc_queue = msgQ;
+    std::cout << "Q Capacity is: " << spsc_queue->getQ().write_available() << std::endl;
+    if (!spsc_queue->getQ().is_lock_free())
         cout << "boost::lockfree::queue is not lockfree" << endl;
     else
         cout << "boost::lockfree::queue is lockfree" << endl;
 
-    pool = new boostThread::ThreadPool(THREADS_IN_TP);
-    boost::thread producer_thread(producer);
+    pool = new boostThread::ThreadPool(thrdInTP);
+    boost::thread producer_thread(producer, producerCount);
     boost::thread consumer_thread(consumer);
 
     producer_thread.join();
     done = true;
     consumer_thread.join();
     
-    cout << "Q_LENGHT: " << Q_LENGHT << endl;
-    cout << "PRODUCER_COUNT: " << PRODUCER_COUNT << endl;
-    cout << "THREADS_IN_TP: " << THREADS_IN_TP << endl;
+    cout << "Q_LENGHT: " << qSize << endl;
+    cout << "PRODUCER_COUNT: " << producerCount << endl;
+    cout << "THREADS_IN_TP: " << thrdInTP << endl;
     cout << "min: " << minTime << " ms"  << endl;
-    cout << "avg: " << totalTime/PRODUCER_COUNT << " ms" << endl;
+    cout << "avg: " << totalTime/producerCount << " ms" << endl;
     cout << "max: " << maxTime << " ms" << endl;
     cout << "Producer Time: " << prodTime.count() << " ms" << endl;
     cout << "produced " << producer_count << " objects." << endl;
     cout << "consumed " << consumer_count << " objects." << endl;
+    
+    return 1;
 }
  
