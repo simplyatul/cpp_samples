@@ -1,5 +1,5 @@
 /*
- * run: g++ thread_8_sp_sc_2.cpp -lpthread -lboost_thread -lboost_chrono -lboost_date_time
+ * run: g++ thread_8_sp_sc_2.cpp -lpthread -lboost_thread -lboost_chrono
  * Single Producer(sp), Single Consumer (sc) 
  *
  * Ref/Credits:
@@ -24,7 +24,7 @@ using namespace std;
 
 uint32_t totalTime = 0;
 uint32_t maxTime = 0;
-uint32_t minTime = 0;
+uint32_t minTime = 10000;
 
 boostThread::ThreadPool *pool;
 

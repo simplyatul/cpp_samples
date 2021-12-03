@@ -11,6 +11,7 @@
  */
 
 #include <boost/lockfree/spsc_queue.hpp>
+#include <boost/lockfree/queue.hpp>
 #include <iostream> 
 #include <cstddef>
 
@@ -20,10 +21,10 @@ template<class T>
 class RingBuffer {
 private:
     int capacity;
-    boost::lockfree::spsc_queue<T> queue;
+    boost::lockfree::queue<T> queue;
 
 public:
-    boost::lockfree::spsc_queue<T> & getQ() {
+    boost::lockfree::queue<T> & getQ() {
         return queue;
     }
 
