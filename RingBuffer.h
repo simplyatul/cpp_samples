@@ -21,10 +21,10 @@ template<class T>
 class RingBuffer {
 private:
     int capacity;
-    boost::lockfree::queue<T> queue;
+    boost::lockfree::spsc_queue<T> queue;
 
 public:
-    boost::lockfree::queue<T> & getQ() {
+    boost::lockfree::spsc_queue<T> & getQ() {
         return queue;
     }
 

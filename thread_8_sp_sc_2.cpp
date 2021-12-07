@@ -6,6 +6,7 @@
  * http://man.hubwiz.com/docset/Boost.docset/Contents/Resources/Documents/boost/doc/html/lockfree/examples.html
  * https://en.cppreference.com/w/cpp/chrono/duration/duration_cast
  * https://en.cppreference.com/w/cpp/chrono/high_resolution_clock/now
+ * https://stackoverflow.com/questions/7560114/random-number-c-in-some-range/7560151
  */
 
 #include <iostream>
@@ -19,6 +20,7 @@
 #include <chrono>
 #include "RingBuffer.h"
 #include <string>
+#include <random>
 
 using namespace std;
 
@@ -38,7 +40,12 @@ public:
         //cout << "Msg " << msgNo << " created!!!" << endl;
     };
     void processMsg() {
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(1));
+        
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(1, 200); // define the range
+
+        boost::this_thread::sleep_for(boost::chrono::microseconds(distr(gen)));
         end = std::chrono::high_resolution_clock::now();
         done=true;
     }

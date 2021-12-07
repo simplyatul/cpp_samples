@@ -1,3 +1,6 @@
+/*
+ * run: g++ auto_0.cpp
+ */
 #include <iostream>
 #include <string>
 #include <typeinfo>

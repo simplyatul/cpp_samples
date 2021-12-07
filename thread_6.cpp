@@ -30,6 +30,8 @@ void newThrd_1() {
     cout << "In " << __func__ << endl;
     
     pthread_t currThrd = pthread_self();
+    pthread_t tId = pthread_self();
+    cout << "TID: " << to_string(tId) << endl;
     pthread_setname_np(currThrd, __func__);
     sleep(500);
 }
