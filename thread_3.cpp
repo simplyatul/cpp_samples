@@ -4,11 +4,13 @@
 
 /* 
  Interrupting the thread
+ run: g++ thread_3.cpp -lboost_thread -lpthread -lboost_chrono
 
 */
 
 #define LOGTIME \
     std::cout << std::time(nullptr) << ": " << __FUNCTION__ << ":" << __LINE__ << std::endl
+
 
 class A
 {
@@ -30,11 +32,22 @@ public:
 
     void execute(std::string command)
     {
+            LOGTIME;
+        sleep(5);
+            LOGTIME;
         for(int i = 0; i < 5; i++)
         {
             std::cout<<command<<" :: "<<i<<std::endl;
             LOGTIME;
-            boost::this_thread::sleep_for(boost::chrono::seconds(1)); 
+            try {
+                boost::this_thread::sleep_for(boost::chrono::seconds(10)); 
+            } catch(boost::thread_interrupted const& )
+            {
+                //clean resources
+                std::cout << "Worker thread interrupted" << std::endl;
+                return;
+            }
+            LOGTIME;
             A a;
             /* 
              * If interrupt is called then 

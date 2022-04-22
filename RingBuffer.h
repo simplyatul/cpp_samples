@@ -10,8 +10,18 @@
  * https://stackoverflow.com/questions/57268969/how-to-pass-capacity-size-to-lock-free-spsc-queue-via-constructor
  */
 
-#include <boost/lockfree/spsc_queue.hpp>
+#define USE_BOOST_SPSC_Q        
+//#define USE_BOOST_LOCKFREE_Q    
+//#define USE_STD_QUEUE_Q
+
+#ifdef USE_BOOST_LOCKFREE_Q
 #include <boost/lockfree/queue.hpp>
+#endif
+
+#ifdef USE_BOOST_SPSC_Q
+#include <boost/lockfree/spsc_queue.hpp>
+#endif
+
 #include <iostream> 
 #include <cstddef>
 
@@ -21,10 +31,22 @@ template<class T>
 class RingBuffer {
 private:
     int capacity;
+#ifdef USE_BOOST_LOCKFREE_Q
+    boost::lockfree::queue<T> queue;
+#endif
+
+#ifdef USE_BOOST_SPSC_Q
     boost::lockfree::spsc_queue<T> queue;
+#endif
 
 public:
+#ifdef USE_BOOST_LOCKFREE_Q
+    boost::lockfree::queue<T> & getQ() {
+#endif
+
+#ifdef USE_BOOST_SPSC_Q
     boost::lockfree::spsc_queue<T> & getQ() {
+#endif
         return queue;
     }
 

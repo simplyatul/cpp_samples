@@ -12,7 +12,6 @@
 #include <iostream>
 #include <thread>
 #include <boost/thread/thread.hpp>
-#include <boost/lockfree/spsc_queue.hpp>
 #include <iostream>
 #include <boost/atomic.hpp>
 #include "ThreadPool.h"
@@ -30,6 +29,25 @@ uint32_t minTime = 10000;
 
 boostThread::ThreadPool *pool;
 
+
+/*
+
+class A{
+};
+
+boost::lockfree::spsc_queue<std::shared_ptr<A>, boost::lockfree::capacity<1024> > aQ; // This works.
+
+boost::lockfree::queue<std::shared_ptr<A> > aQ;
+Error:
+/usr/include/boost/lockfree/queue.hpp:95:5: error: static assertion failed: (boost::has_trivial_destructor<T>::value)
+   95 |     BOOST_STATIC_ASSERT((boost::has_trivial_destructor<T>::value));
+      |     ^~~~~~~~~~~~~~~~~~~
+/usr/include/boost/lockfree/queue.hpp:99:5: error: static assertion failed: (boost::has_trivial_assign<T>::value)
+   99 |     BOOST_STATIC_ASSERT((boost::has_trivial_assign<T>::value));
+      |     ^~~~~~~~~~~~~~~~~~~
+
+*/
+
 class ShmMsg {
     uint32_t msgNo;
     volatile bool done=false;
@@ -43,7 +61,7 @@ public:
         
         std::random_device rd; // obtain a random number from hardware
         std::mt19937 gen(rd()); // seed the generator
-        std::uniform_int_distribution<> distr(1, 200); // define the range
+        std::uniform_int_distribution<> distr(1, 2000); // define the range
 
         boost::this_thread::sleep_for(boost::chrono::microseconds(distr(gen)));
         end = std::chrono::high_resolution_clock::now();
@@ -120,7 +138,7 @@ int main(int argc, char* argv[])
     using namespace std;
     auto msgQ = new RingBuffer<ShmMsg*>(qSize); // capacity size: 3
     spsc_queue = msgQ;
-    std::cout << "Q Capacity is: " << spsc_queue->getQ().write_available() << std::endl;
+    //std::cout << "Q Capacity is: " << spsc_queue->getQ().write_available() << std::endl;
     if (!spsc_queue->getQ().is_lock_free())
         cout << "boost::lockfree::queue is not lockfree" << endl;
     else
