@@ -1,6 +1,8 @@
 /*
  * run: g++ -std=gnu++17 fibo_memoization.cpp
  * Ref: https://www.youtube.com/watch?v=wFRlUNSMK8s
+ * Value of Fibo caulated at compile time
+ * Check with g++ -S fibo_memoization.cpp
  */
 
 #include <cstdio>

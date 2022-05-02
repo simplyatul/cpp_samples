@@ -1,5 +1,6 @@
 /*
  * run: g++ fibo_simple.cpp
+ * Value of Fibo caulated at runtime
  */
 
 #include <cstdio>
