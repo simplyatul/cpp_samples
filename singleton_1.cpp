@@ -18,6 +18,10 @@ private:
 public:
     // Logger instance is created only when Instance API is called
     static Logger & Instance() {
+        /*
+         * Mayer's Singleton way
+         * from C++11, static construction is thread safe
+         */
         static Logger m_instance;
         return m_instance;
     }
@@ -49,4 +53,5 @@ int main()
     In log: 0x55d35fd43152
     In log: 0x55d35fd43152
  */
+
 
