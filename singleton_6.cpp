@@ -1,6 +1,12 @@
 /*
  * run: g++ singleton_6.cpp
  * Solution to problem stated in singleton_5.cpp
+ *
+ * However this version has an issue as well. If a new printer class 
+ * is added then we have to modify Printer::Instance API. 
+ * This violets Open Closed Principle (Modules should be open for 
+ * extensions but closed for modifications)
+ *
  */
 
 #include <iostream>
