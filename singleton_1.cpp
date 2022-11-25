@@ -13,9 +13,22 @@ private:
     Logger() {
         std::cout << "In C'tor" << std::endl;
     };
+public:
+       
     Logger(const Logger&) = delete ;
     Logger & operator=(const Logger&) = delete ;
-public:
+
+    Logger(const Logger&&) = delete ;   // move constrcutor
+    Logger & operator=(const Logger&&) = delete ; // move assignment operator
+
+    /*
+     * Note: Scott Meyers mentions in his Effective Modern
+     * C++ book, that deleted functions should generally
+     * be public as it results in better error messages
+     * due to the compilers behavior to check accessibility
+     * before deleted status
+    */
+
     // Logger instance is created only when Instance API is called
     static Logger & Instance() {
         /*
@@ -53,5 +66,4 @@ int main()
     In log: 0x55d35fd43152
     In log: 0x55d35fd43152
  */
-
 
