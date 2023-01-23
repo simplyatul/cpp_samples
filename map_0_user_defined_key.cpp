@@ -35,16 +35,18 @@ struct StudentIdComparator {
     }
 };
 
+
+
+#define INSERT_DATA(mymap) mymap.insert(std::pair<Student, int>(Student("Ram", 20), 20)); \
+    mymap.insert(std::pair<Student, int>(Student("Sham", 50), 50)); \
+    mymap.insert(std::pair<Student, int>(Student("Kiran", 500), 5));
+
 void insertIntoMap(std::map<Student, int> &s) {
-    s.insert(std::pair<Student, int>(Student("Ram", 20), 20));
-    s.insert(std::pair<Student, int>(Student("Sham", 50), 50));
-    s.insert(std::pair<Student, int>(Student("Kiran", 5), 5));
+    INSERT_DATA(s)
 }
 
-void insertIntoMapWithComparator(std::map<Student, int, StudentIdComparator> &s) {
-    s.insert(std::pair<Student, int>(Student("Ram", 20), 20));
-    s.insert(std::pair<Student, int>(Student("Sham", 50), 50));
-    s.insert(std::pair<Student, int>(Student("Kiran", 500), 5));
+void insertIntoMap(std::map<Student, int, StudentIdComparator> &s) {
+    INSERT_DATA(s)
 }
 
 
@@ -52,18 +54,16 @@ int main()
 {
     std::map<Student, int> s1Map;
     insertIntoMap(s1Map);
-    
     cout << "Sorted by Name using operator <" << endl;
     for (const auto &it: s1Map) {
         cout << it.first.getName() << " " << it.first.getId() << endl;
-        //cout << it.first.getName() << endl;
     }
     
     std::map<Student, int, StudentIdComparator> s2Map;
-    insertIntoMapWithComparator(s2Map);
-    
-    cout << "Sorted by Id using comparator operator ()" << endl;
+    insertIntoMap(s2Map);
+    cout << endl << "Sorted by Id using comparator operator ()" << endl;
     for (const auto &it: s2Map) {
         cout << it.first.getName() << " " << it.first.getId() << endl;
     }
 }
+
