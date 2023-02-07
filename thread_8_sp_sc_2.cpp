@@ -29,25 +29,6 @@ uint32_t minTime = 10000;
 
 boostThread::ThreadPool *pool;
 
-
-/*
-
-class A{
-};
-
-boost::lockfree::spsc_queue<std::shared_ptr<A>, boost::lockfree::capacity<1024> > aQ; // This works.
-
-boost::lockfree::queue<std::shared_ptr<A> > aQ;
-Error:
-/usr/include/boost/lockfree/queue.hpp:95:5: error: static assertion failed: (boost::has_trivial_destructor<T>::value)
-   95 |     BOOST_STATIC_ASSERT((boost::has_trivial_destructor<T>::value));
-      |     ^~~~~~~~~~~~~~~~~~~
-/usr/include/boost/lockfree/queue.hpp:99:5: error: static assertion failed: (boost::has_trivial_assign<T>::value)
-   99 |     BOOST_STATIC_ASSERT((boost::has_trivial_assign<T>::value));
-      |     ^~~~~~~~~~~~~~~~~~~
-
-*/
-
 class ShmMsg {
     uint32_t msgNo;
     volatile bool done=false;
