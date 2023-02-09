@@ -7,7 +7,17 @@
  * https://en.cppreference.com/w/cpp/chrono/duration/duration_cast
  * https://en.cppreference.com/w/cpp/chrono/high_resolution_clock/now
  * https://stackoverflow.com/questions/7560114/random-number-c-in-some-range/7560151
- */
+ *
+ * What this program is doing?
+ * ShmMsg is an object which producer is producing and putting it in a Q 
+ * spsc_queue. consumer is consuming the ShmMsg object.
+ * The requirement is consumer need to process objects in order strictly.
+ * So as soon as producer puts the object in the Q, a thread from thread pool 
+ * is attached to it and thread works on the work while ShmMsg object is 
+ * traveling in the Q. consumer pull the object from Q only if thread has 
+ * finished the work of ShmMsg object.
+ */ 
+ 
 
 #include <iostream>
 #include <thread>
