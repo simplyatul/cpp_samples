@@ -2,7 +2,6 @@
  * run: g++ sizeof_0.cpp
  */
 
-
 #include <iostream>
 
 template <typename T>
@@ -32,11 +31,12 @@ int main()
     SizeOfT<uint32_t *> b; // Pj 8
     SizeOfT<short *> c; // Ps 8
     SizeOfT<void *> d; // Pv 8
-    SizeOfT<char> e; // c 8
+    SizeOfT<char> e; // c 1
     SizeOfT<Zero> f; // 4Zero 1
 
     SizeOfT_C11<short> g; // s 2
     SizeOfT_C11<double> h; // d 8
+
 }
 
 

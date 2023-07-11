@@ -41,11 +41,11 @@ int main()
     LOG_TRACE("main", "log 2 " + to_string(k));
     LOG_TRACE("main", "log 3 " + getStr());
     LOG_TRACE("main", "log 3 " + getStr() + " log 4");
-/*
+
     LOG_TRACE(function_name, 
-        "log 2" + 
-        "log 3" 
-        + "log 4");
-*/
+        "log 2" 
+        " log 3" 
+        " log 4");
+
     return 0;
 }
