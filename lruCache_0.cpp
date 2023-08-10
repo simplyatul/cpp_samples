@@ -35,47 +35,54 @@ struct value {
 class LruCache {
 private:
     int capacity_=10;
-    list<int> lruList_;
+    list<int> lruList_; // key at the front is LRU key. One can do other way round as well
     unordered_map<int /*key*/, value /*value*/> cache_;
 
 public:
     LruCache(){}
-    LruCache(const uint32_t cap): capacity_(cap), lruList_(cap)  {}
+    LruCache(const uint32_t cap): capacity_(cap)  {}
 
     void put(const int &k, const int &v) {
         // key found
         const auto it = cache_.find(k);
         if(it != cache_.end()) {
-            // update the value
+            // key found. Update the value
             it->second.v_ = v;
-            // ToDo: remove the key ref from lruList
-            // ToDo: put the key in front of the list
+            // remove the key ref from lruList
+            lruList_.erase(it->second.it_);
+            // put the key at end of the list
+            lruList_.push_back(k);
+            it->second.it_ = std::prev(lruList_.end());
             return;
         }
         // key not found
         if(cache_.size() >= capacity_) {
-            // capacity is full
-            // evict the LRU key
+            // capacity is full. Evict the LRU key
             auto lruKey = lruList_.front();
             lruList_.erase(lruList_.begin());
             cache_.erase(lruKey);
         }
         lruList_.push_back(k);
-        value tempv(k, v, lruList_.begin());
+        value tempv(k, v, std::prev(lruList_.end()));
         cache_.insert(pair<int, value>(k, tempv));
-
               
         // Following works too
         /* 
         cache_.insert(pair<int, value>(k, 
                 value(k ,v, lruList_.end())));
         */
-
+       return;
     }
 
     int get(const int& k) {
         const auto it = cache_.find(k);
         if(it != cache_.end()) {
+            // key found
+            lruList_.erase(it->second.it_);
+            // put the key at end of the list
+            lruList_.push_back(k);
+            it->second.it_ = std::prev(lruList_.end());
+
             return it->second.v_;
         }
         return -1;
@@ -83,11 +90,44 @@ public:
 
     int getCapacity() { return capacity_;}
 
+    void print()
+    {
+        static int k = 1;
+        cout << "********" << k << " Start ********\n";
+        for (const auto x: lruList_)
+            cout << x << ' ';
+        std::cout << '\n';
+
+        for(const auto n: cache_) 
+            cout << n.second.k_ << ' ';
+        std::cout << '\n';
+
+        for(const auto n: cache_) 
+            cout << *(n.second.it_) << ' ';
+        std::cout << '\n';
+        cout << "********" << k << " End ********\n";
+        k++;
+    }
+
+
 };
 
 int main() {
-    LruCache c;
-    cout << c.getCapacity() << endl;
- 
+    LruCache c(3);
+    cout << "Capacity: " << c.getCapacity() << endl;
+    c.put(1, 10);
+    c.put(2, 20);
+    c.put(3, 30);
+    c.print();
+
+    c.put(4, 40);
+    c.print();
+
+    c.get(3);
+    c.print();
+
+    c.put(5, 50);
+    c.print();
+
     return 0;
 }
