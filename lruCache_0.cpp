@@ -34,7 +34,7 @@ struct value {
 
 class LruCache {
 private:
-    int capacity_=10;
+    int capacity_=DEF_CACHE_CAP;
     list<int> lruList_; // key at the front is LRU key. One can do other way round as well
     unordered_map<int /*key*/, value /*value*/> cache_;
 
@@ -129,5 +129,7 @@ int main() {
     c.put(5, 50);
     c.print();
 
+    c.put(4, 400);
+    c.print();
     return 0;
 }
