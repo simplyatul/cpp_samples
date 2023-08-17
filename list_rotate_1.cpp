@@ -1,6 +1,7 @@
 /*
- * run: g++ list_rotate_0.cpp
- * Rotates the SLL by k positions
+ * run: g++ list_rotate_1.cpp
+ * Vs list_rotate_0.cpp => using smart pointers
+ * ToDo: Complete the rotate function
  */
 
 #include <iostream>
