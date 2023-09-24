@@ -39,6 +39,10 @@ uint32_t minTime = 10000;
 
 boostThread::ThreadPool *pool;
 
+std::random_device rd; // obtain a random number from hardware
+std::mt19937 gen(rd()); // seed the generator
+std::uniform_int_distribution<> distr(1, 2000); // define the range
+
 class ShmMsg {
     uint32_t msgNo;
     volatile bool done=false;
@@ -50,10 +54,6 @@ public:
     };
     void processMsg() {
         
-        std::random_device rd; // obtain a random number from hardware
-        std::mt19937 gen(rd()); // seed the generator
-        std::uniform_int_distribution<> distr(1, 2000); // define the range
-
         boost::this_thread::sleep_for(boost::chrono::microseconds(distr(gen)));
         end = std::chrono::high_resolution_clock::now();
         done=true;
@@ -84,11 +84,12 @@ void producer(const uint32_t producerCount)
     for (int i = 0; i != producerCount; ++i) {
         int value = ++producer_count;
         ShmMsg *msg = new ShmMsg(value);
+        while (!spsc_queue->getQ().push(msg)) {
+            cout << "Producer Thread: Q full\n";
+        }
         pool->service.post(
             boost::bind(&ShmMsg::processMsg, msg)
         );
-        while (!spsc_queue->getQ().push(msg))
-            ;
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     prodTime = t2-t1;
