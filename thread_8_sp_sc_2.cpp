@@ -45,7 +45,7 @@ std::uniform_int_distribution<> distr(1, 2000); // define the range
 
 class ShmMsg {
     uint32_t msgNo;
-    volatile bool done=false;
+    volatile bool done = false;
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 public: 
     ShmMsg(uint32_t no):msgNo(no) {
@@ -75,8 +75,6 @@ boost::atomic_int consumer_count (0);
 
 RingBuffer<ShmMsg*> *spsc_queue;
 
-std::chrono::duration<double, std::milli> prodTime;
-
 void producer(const uint32_t producerCount)
 {
     pthread_setname_np(pthread_self(), __func__);
@@ -92,7 +90,8 @@ void producer(const uint32_t producerCount)
         );
     }
     auto t2 = std::chrono::high_resolution_clock::now();
-    prodTime = t2-t1;
+    std::chrono::duration<double, std::milli> prodTime = t2-t1;
+    cout << "Producer Time: " << prodTime.count() << " ms" << endl;
 }   
 
 boost::atomic<bool> done (false);
@@ -137,10 +136,14 @@ int main(int argc, char* argv[])
         cout << "boost::lockfree::queue is lockfree" << endl;
 
     pool = new boostThread::ThreadPool(thrdInTP);
-    boost::thread producer_thread(producer, producerCount);
+    boost::thread producer_thread_1(producer, producerCount);
+    boost::thread producer_thread_2(producer, producerCount);
+    boost::thread producer_thread_3(producer, producerCount);
     boost::thread consumer_thread(consumer);
 
-    producer_thread.join();
+    producer_thread_1.join();
+    producer_thread_2.join();
+    producer_thread_3.join();
     done = true;
     consumer_thread.join();
     
@@ -150,7 +153,7 @@ int main(int argc, char* argv[])
     cout << "min: " << minTime << " ms"  << endl;
     cout << "avg: " << totalTime/producerCount << " ms" << endl;
     cout << "max: " << maxTime << " ms" << endl;
-    cout << "Producer Time: " << prodTime.count() << " ms" << endl;
+    
     cout << "produced " << producer_count << " objects." << endl;
     cout << "consumed " << consumer_count << " objects." << endl;
     
