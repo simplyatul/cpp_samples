@@ -1,3 +1,8 @@
+/*
+ * MIT License
+ * Copyright (c) 2024 Atul Thosar (atulthosar@gmail.com)
+ */
+
 #include <stdio.h>
 
 /*
