@@ -4,6 +4,7 @@
 #include <algorithm>
 
 // Problem Description: https://leetcode.com/problems/reverse-words-in-a-string/description/
+// Credits: https://walkccc.me/LeetCode/problems/151/
 
 using namespace std;
 
@@ -24,40 +25,44 @@ class SolutionTwo: public Solution {
 public:
     string reverseWords(string s) {
         std::reverse(s.begin(), s.end());
+        reverseEachWords(s);
+        trimSpaces(s);
         return s;
-        int len = s.length(); 
-        std::cout << "len: " << s.length() << "\n";
-        len-=1;
-        int32_t endPos=0, startPos=0;
-        while (len>0)
-        {
-            string word;
-            // Prep a word until 
-            if (SPACE == s[len]) {
-                s.pop_back();
-                std::cout << s.length() << "\n";
-                --len;
-                continue;
-            }
-            else {
+    }
+private:
+    void reverseEachWords(string &s) {
+        int i=0;
+        int j=0;
+        int n=s.length();
 
-                while(SPACE != s[len]) {
-                    word.insert(0, 1, s[len]);
-                    s.pop_back();
-                    --len;
-                }
-
-                s.insert(0, word);
-            }
-
-            /* code */
+        while (i < n) {
+            while (i < j || (i < n && s[i] == ' '))  // Skip the spaces.
+                ++i;
+            while (j < i || (j < n && s[j] != ' '))  // Skip the spaces.
+                ++j;
+            // i points to start of the word
+            // j points to end of the word
+            reverse(s.begin() + i, s.begin() + j);  // Reverse the word.
         }
-        
-        
-        return s;
+    }
 
+    void trimSpaces(string &s) {
+        int i = 0;
+        int j = 0;
+        int n = s.length();
 
-        
+        while (j < n) {
+            while (j < n && s[j] == ' ')  // Skip the spaces.
+                ++j;
+            while (j < n && s[j] != ' ')  // Keep non spaces
+                s[i++] = s[j++];
+            while (j < n && s[j] == ' ')  // Skip the spaces.
+                ++j;
+            if (j < n)  // Keep only one space.
+                s[i++] = ' ';
+        }
+
+        s = s.substr(0, i);
     }
 };
 
@@ -98,16 +103,16 @@ public:
 
 int main() {
     vector< string > inputs = {
+        {"w1  "},
         {"a"},
         {"a good   example"},
         {"the sky is blue"},
-        {"w1  "},
         {"  hello world  "}
         
 
     };
-    Solution *s = new SolutionOne();
-    //Solution *s = new SolutionTwo();
+    // Solution *s = new SolutionOne();
+    Solution *s = new SolutionTwo();
     for(auto a: inputs) {
         cout << "Sol: " << s->reverseWords(a) << endl;
     }
