@@ -43,6 +43,7 @@ public:
     LruCache(const uint32_t cap): capacity_(cap)  {}
 
     void put(const int &k, const int &v) {
+        cout << "Putting key: "  << k << endl;
         // key found
         const auto it = cache_.find(k);
         if(it != cache_.end()) {
@@ -75,6 +76,7 @@ public:
     }
 
     int get(const int& k) {
+        cout << "Getting key: "  << k << endl;
         const auto it = cache_.find(k);
         if(it != cache_.end()) {
             // key found
@@ -118,6 +120,7 @@ int main() {
     c.put(1, 10);
     c.put(2, 20);
     c.put(3, 30);
+    //cout << "After inserting keys 1, 2, 3" << endl;
     c.print();
 
     c.put(4, 40);
