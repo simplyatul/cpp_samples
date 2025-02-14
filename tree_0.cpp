@@ -1,23 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include "tree_utils.h"
 
 using namespace std;
 
 // Q: Given the root of a binary tree, return its maximum depth
 // Q: https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
-
-struct TreeNode
-{
-    int h = -1; // dist from root.
-    int val;
-    
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
 
 int maxDepth = 0;
 
@@ -89,20 +78,6 @@ TreeNode* makeTree(const vector<int> &nodes) {
 
 }
 
-void inOrderTravarsal(const TreeNode* root) {
-    if(!root) return;
-    inOrderTravarsal(root->left);
-    cout << root->val << " ";
-    inOrderTravarsal(root->right);
-};
-
-void preOrderTravarsal(const TreeNode* root) {
-    if(!root) return;
-    cout << root->val << " ";
-    preOrderTravarsal(root->left);
-    preOrderTravarsal(root->right);
-};
-
 int main() {
     vector< vector<int> > d1 = {
         {},
@@ -113,7 +88,7 @@ int main() {
     Solution s;
     for(auto a: d1) {
         auto root = makeTree(a);
-        preOrderTravarsal(root);
+        preOrderTraversal(root);
         
         cout << " Max Depth: " << s.maxDepthThree(root) << endl;
     }
