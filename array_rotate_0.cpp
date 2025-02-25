@@ -5,7 +5,7 @@
 using namespace std;
 
 // Rotate Array by k steps
-// Q: https://leetcode.com/problems/rotate-array/description/?envType=study-plan-v2&envId=top-interview-150
+// Q: https://leetcode.com/problems/rotate-array/description/
 // Other Sol => https://walkccc.me/LeetCode/problems/189/
 
 class Solution {
