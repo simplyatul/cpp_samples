@@ -47,36 +47,6 @@ public:
     }
 };
 
-TreeNode* makeTree(const vector<int> &nodes) {
-    if(nodes.empty() || nodes[0] == -1) return NULL;
-
-    TreeNode* root = new TreeNode(nodes[0]);
-    queue<TreeNode*> q;
-    q.push(root);
-    int i = 1;
-    while(!q.empty() && i < nodes.size()) {
-        TreeNode* curr = q.front();
-        q.pop();
-
-        // left child
-        if(i < nodes.size() && nodes[i] != -1) {
-            TreeNode* left = new TreeNode(nodes[i]);
-            curr->left = left;
-            q.push(left);
-        }
-        i++;
-
-        if(i < nodes.size() && nodes[i] != -1) {
-            TreeNode* right = new TreeNode(nodes[i]);
-            curr->right = right;
-            q.push(right);
-        }
-        i++;
-    }
-
-    return root;
-
-}
 
 int main() {
     vector< vector<int> > d1 = {
