@@ -9,24 +9,6 @@ using namespace std;
 
 class Solution {
 public:
-    bool exist(vector<vector<char>>& board, string word) {
-        const int rows = board.size();
-        const int cols = board[0].size();
-        int k=0;
-        for(int i=0; i<rows; ++i) {
-            for(int j=0; j<cols; ++j) {
-                if(board[i][j] == word[k]) {
-                    vector<vector<int>> visited(rows, vector<int>(cols));
-                    initVisited(visited);
-                    bool ans = moveNext(board, word, k+1, i, j, visited);
-                    if(true == ans)
-                        return true;
-                }
-            }
-        }
-
-        return false;
-    }
 private:
     bool moveNext(vector<vector<char>>& board, 
                 string word, int wi, int r, int c,
@@ -76,7 +58,7 @@ private:
             for(int j=0; j<cols; ++j)
                 visited[i][j]=0;
     }
-
+public:
     void printBard(const vector<vector<char>>& board) {
         const int rows = board.size();
         const int cols = board[0].size();
@@ -87,6 +69,25 @@ private:
             cout << "\n";
         }
     }
+    bool exist(vector<vector<char>>& board, string word) {
+        const int rows = board.size();
+        const int cols = board[0].size();
+        int k=0;
+        for(int i=0; i<rows; ++i) {
+            for(int j=0; j<cols; ++j) {
+                if(board[i][j] == word[k]) {
+                    vector<vector<int>> visited(rows, vector<int>(cols));
+                    initVisited(visited);
+                    bool ans = moveNext(board, word, k+1, i, j, visited);
+                    if(true == ans)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 };
 
 int main() {

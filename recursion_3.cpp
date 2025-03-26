@@ -21,11 +21,16 @@ private:
      * MazeMax = 2000, Time to Search = ~ 2740 ms
      * ToDo Optimize for higher values of Maze size 
      */
-    const int MazeMax = 5;
+    const int MazeMax = 4;
     // four ways to move => left, right, up, down
     vector<int> rNbhr = {0, 0, -1, 1};
     vector<int> cNbhr = {-1, 1, 0, 0};
-
+    vector<vector<int>> dir = {
+      {0, -1, 'L'},
+      {0, 1, 'R'},
+      {-1, 0, 'U'},
+      {1, 0, 'D'},
+    };
     bool isCurrPositionBlocked(const vector<vector<int>>& blocked, 
                     const vector<int> curr) {
       for (auto blk: blocked) {
@@ -59,7 +64,9 @@ private:
     }
 
     bool isPossible(vector<vector<int>>& blocked, 
-        vector<int>& source, vector<int>& target, vector<vector<int>>& visited) {
+        vector<int>& source, vector<int>& target, 
+        vector<vector<int>>& visited,
+        string& path) {
         auto curr = source;
 
         // base
@@ -73,8 +80,10 @@ private:
           vector<int> nextPosition = {curr[0]+rNbhr[i], curr[1]+cNbhr[i]};
           if (true == isCurrPositionVisited(nextPosition, visited))
             continue;
-          if (true == isPossible(blocked, nextPosition, target, visited))
+          path.push_back(char(dir[i][2]));
+          if (true == isPossible(blocked, nextPosition, target, visited, path))
             return true;
+          path.pop_back();
         }
 
         return false;
@@ -82,9 +91,10 @@ private:
     }
 public:
     bool isEscapePossible(vector<vector<int>>& blocked, 
-      vector<int>& source, vector<int>& target) {
+      vector<int>& source, vector<int>& target,
+      string& path) {
         vector<vector<int>> visited;
-      return isPossible(blocked, source, target, visited);
+      return isPossible(blocked, source, target, visited, path);
     }
 };
 
@@ -100,12 +110,13 @@ int main()
     };
     vector<int> source = {0, 3};
     vector<int> target = {3, 0};
-
+    string path;
     Solution s;
     auto start = chrono::high_resolution_clock::now();
-    auto res = s.isEscapePossible(blocked, source, target);
+    auto res = s.isEscapePossible(blocked, source, target, path);
     auto stop = chrono::high_resolution_clock::now();
     cout << "Is reachable: " << res << endl;
+    cout << "Path is: " << path << endl;
     cout << "Function took: " 
           << chrono::duration<double, std::milli>(stop-start).count() 
           << " ms";
