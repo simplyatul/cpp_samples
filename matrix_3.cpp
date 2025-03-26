@@ -27,7 +27,7 @@ public:
 
         return false;
     }
-
+private:
     bool moveNext(vector<vector<char>>& board, 
                 string word, int wi, int r, int c,
                 vector<vector<int>> visited) {
