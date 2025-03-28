@@ -29,10 +29,20 @@ public:
      */
 
     int climbStairsTwo(int n) {
-        if(n == 0) return 0;
+        // steps req to climb 0 stair
+        if(n == 0) return 0; 
+        // steps req to climb 1 stair
         if(n == 1) return 1;
+        // steps req to climb 2 stairs
         if(n == 2) return 2;
 
+        /* In same way, steps required to climb
+        * n stairs = steps required to climb (n-1) stairs => prev1
+        *            +
+        *            steps required to climb (n-2) stairs => prev2
+        *
+        */
+        
         int prev1 = 2;
         int prev2 = 1;
         int curr = 0;
