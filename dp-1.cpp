@@ -1,5 +1,5 @@
 /*
- * run: g++ dp-0.cpp
+ * run: g++ dp-1.cpp
  * Q: 746. Min Cost Climbing Stairs
  * Ref: https://leetcode.com/problems/min-cost-climbing-stairs/description/?envType=study-plan-v2&envId=leetcode-75
  */
