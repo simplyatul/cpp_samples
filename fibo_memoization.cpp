@@ -1,7 +1,7 @@
 /*
  * run: g++ -std=gnu++17 fibo_memoization.cpp
  * Ref: https://www.youtube.com/watch?v=wFRlUNSMK8s
- * Value of Fibo caulated at compile time
+ * Value of Fibo calculated at compile time
  * Check with g++ -S fibo_memoization.cpp
  */
 
@@ -21,7 +21,7 @@ constexpr uint64_t fib() {
 }
 
 int main(int argc, char** argv) {
-    constexpr uint64_t f = fib<100>();
+    constexpr uint64_t f = fib<50>();
     printf("%ld\n", f);
     return 0;
 }
